@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""
+Prim's Minimum Spanning Tree Algorithm
+"""
+import heapq
+
+def prim(vertices, edges, start):
+    adj = {v: [] for v in vertices}
+    for u, v, w in edges:
+        adj[u].append((w, v)); adj[v].append((w, u))
+
+    visited, mst, weight = set(), [], 0
+    heap = [(0, start, None)]
+    while heap and len(visited) < len(vertices):
+        w, u, p = heapq.heappop(heap)
+        if u in visited: continue
+        visited.add(u)
+        if p is not None: mst.append((p, u, w)); weight += w
+        for nw, nb in adj[u]:
+            if nb not in visited: heapq.heappush(heap, (nw, nb, u))
+    return mst, weight
+
+def main():
+    n = int(input("Enter number of vertices: "))
+    e = int(input("Enter number of edges: "))
+    vertices = set(range(1, n+1))
+    edges = []
+    print("Enter edges (u v weight):")
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        edges.append((u, v, w))
+
+    start = int(input("Enter start vertex: "))
+    mst, weight = prim(vertices, edges, start)
+
+    print(f"\nMST edges: {mst}")
+    print(f"Total weight: {weight}")
+
+if __name__ == "__main__":
+    main()

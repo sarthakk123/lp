@@ -1,0 +1,129 @@
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+class EightPuzzle:
+    GOAL = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+    def __init__(self, state):
+        self.state = state
+    def find_blank(self):
+        return self.state.index(0)
+    def moves(self):
+        blank = self.find_blank()
+        row, col = blank // 3, blank % 3
+        possible = []
+        if row > 0: possible.append(-3)
+        if row < 2: possible.append(3)
+        if col > 0: possible.append(-1)
+        if col < 2: possible.append(1)
+        return possible
+    def apply_move(self, offset):
+        blank = self.find_blank()
+        new_state = list(self.state)
+        new_state[blank], new_state[blank + offset] = new_state[blank + offset], new_state[blank]
+        return tuple(new_state)
+    def manhattan(self):
+        dist = 0
+        for i, tile in enumerate(self.state):
+            if tile == 0: continue
+            goal_idx = tile - 1
+            dist += abs(i // 3 - goal_idx // 3) + abs(i % 3 - goal_idx % 3)
+        return dist
+    def is_goal(self):
+        return self.state == self.GOAL
+    def __hash__(self):
+        return hash(self.state)
+    def display(self, ax, title=""):
+        ax.clear()
+        ax.set_xlim(0, 3)
+        ax.set_ylim(0, 3)
+        ax.set_aspect('equal')
+        ax.axis('off')
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        for i in range(3):
+            for j in range(3):
+                idx = i * 3 + j
+                val = self.state[idx]
+                ax.add_patch(plt.Rectangle((j, 2-i), 1, 1, facecolor='#ecf0f1', ec='#2c3e50', lw=2))
+                if val != 0:
+                    ax.add_patch(plt.Circle((j+0.5, 2-i+0.5), 0.35, color='#3498db'))
+                    ax.text(j+0.5, 2-i+0.5, str(val), ha='center', va='center',
+                           fontsize=20, fontweight='bold', color='white')
+                else:
+                    ax.text(j+0.5, 2-i+0.5, 'BLANK', ha='center', va='center',
+                           fontsize=8, color='#bdc3c7')
+def astar(initial):
+    from heapq import heappush, heappop
+    start = EightPuzzle(initial)
+    start_h = start.manhattan()
+    open_set = [(start_h, 0, initial)]
+    came_from = {}
+    g_scores = {initial: 0}
+    closed = set()
+    steps = []
+    while open_set:
+        f, g, current = heappop(open_set)
+        if current in closed:
+            continue
+        closed.add(current)
+        puzzle = EightPuzzle(current)
+        h = puzzle.manhattan()
+        steps.append((current, g, h, f))
+        if puzzle.is_goal():
+            path = []
+            node = current
+            while node in came_from:
+                node, move = came_from[node]
+                path.append(move)
+            path.reverse()
+            return path, steps
+        for offset in puzzle.moves():
+            new_state = puzzle.apply_move(offset)
+            tentative_g = g + 1
+
+            if new_state not in g_scores or tentative_g < g_scores[new_state]:
+                g_scores[new_state] = tentative_g
+                h = EightPuzzle(new_state).manhattan()
+                f_new = tentative_g + h
+                came_from[new_state] = (current, offset)
+                heappush(open_set, (f_new, tentative_g, new_state))
+
+    return None, steps
+def main():
+    print("Enter state  ")
+    state = tuple(map(int, input().split()))
+    if sorted(state) != list(range(9)):
+        print("Invalid state! Use digits 0-8, each exactly once.")
+        return
+    print(f"\nInitial state: {state}")
+    print(f"Goal state: {EightPuzzle.GOAL}\n")
+    solution, steps = astar(state)
+    print(f"Steps explored: {len(steps)}")
+    print(f"Solution moves: {len(solution) if solution else 'No solution'}")
+    if solution:
+        fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+        axes = axes.flatten()
+        current = state
+        all_states = [current]
+        for move in solution:
+            puzzle = EightPuzzle(current)
+            current = puzzle.apply_move(move)
+            all_states.append(current)
+        n_show = min(len(all_states), 10)
+        move_names = {-3: 'DOWN', 3: 'UP', -1: 'RIGHT', 1: 'LEFT'}
+        for i in range(n_show):
+            puzzle = EightPuzzle(all_states[i])
+            label = "Start" if i == 0 else (f"Goal" if i == len(all_states)-1 else f"Step {i}")
+            puzzle.display(axes[i], f"{label} (Move {i})")
+            axes[i].text(1.5, -0.3, f"Move: {move_names[solution[i-1]] if i > 0 else 'N/A'}",
+                        ha='center', fontsize=8, transform=axes[i].transData)
+        for j in range(n_show, 10):
+            axes[j].axis('off')
+        plt.suptitle(f"A* Solution: {len(solution)} moves", fontsize=16)
+        plt.tight_layout()
+        plt.savefig("output.png", dpi=100, bbox_inches='tight')
+        print("\nVisualization saved: output.png")
+        plt.close()
+        print(f"\nMove sequence: {solution}")
+if __name__ == "__main__":
+    main()

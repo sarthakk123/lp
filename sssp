@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""
+Single-Source Shortest Path - Bellman-Ford Algorithm
+"""
+def sssp(vertices, edges, source):
+    dist = {v: float('inf') for v in vertices}
+    dist[source] = 0
+    parent = {v: None for v in vertices}
+
+    for _ in range(len(vertices)-1):
+        for u, v, w in edges:
+            if dist[u] != float('inf') and dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                parent[v] = u
+
+    return dist, parent
+
+def main():
+    n = int(input("Enter number of vertices: "))
+    e = int(input("Enter number of edges: "))
+    vertices = set(range(n))
+    edges = []
+    print("Enter edges (u v weight):")
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        edges.append((u, v, w))
+
+    source = int(input("Enter source vertex: "))
+    dist, parent = sssp(vertices, edges, source)
+
+    print(f"\nShortest distances from {source}:")
+    for v in sorted(vertices):
+        if dist[v] == float('inf'):
+            print(f"  {v}: unreachable")
+        else:
+            path = []
+            node = v
+            while node is not None:
+                path.append(str(node)); node = parent[node]
+            print(f"  {v}: dist={dist[v]}, path={' -> '.join(reversed(path))}")
+
+if __name__ == "__main__":
+    main()

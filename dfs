@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""
+Depth First Search (DFS) - Simple implementation for practical exam
+"""
+from collections import defaultdict
+
+def dfs(adj, visited, node):
+    visited.add(node)
+    print(node, end=" ")
+    for neighbor in sorted(adj[node]):
+        if neighbor not in visited:
+            dfs(adj, visited, neighbor)
+
+def main():
+    n = int(input("Enter number of nodes: "))
+    e = int(input("Enter number of edges: "))
+    adj = defaultdict(list)
+    print("Enter edges (u v):")
+    for _ in range(e):
+        u, v = map(int, input().split())
+        adj[u].append(v)
+        adj[v].append(u)
+
+    start = int(input("Enter start node: "))
+    visited = set()
+
+    print(f"\nDFS from {start}:")
+    dfs(adj, visited, start)
+    print(f"\nTotal visited: {len(visited)}")
+
+if __name__ == "__main__":
+    main()

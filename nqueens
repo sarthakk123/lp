@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""
+N-Queens Problem - CSP with Backtracking and Branch & Bound
+"""
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+
+class NQueens:
+    def __init__(self, n):
+        self.n = n
+        self.queens = [-1] * n
+        self.fig, self.axes = plt.subplots(2, 4, figsize=(16, 8))
+        self.axes = self.axes.flatten()
+        self.solutions = []
+        self.step = 0
+
+    def is_safe(self, row, col):
+        for r in range(row):
+            c = self.queens[r]
+            if c == col or abs(c - col) == abs(r - row):
+                return False
+        return True
+
+    def solve(self, row=0):
+        if row == self.n:
+            self.solutions.append(self.queens.copy())
+            return True
+        for col in range(self.n):
+            if self.is_safe(row, col):
+                self.queens[row] = col
+                self.step += 1
+                if self.step <= 8:
+                    self.show_board(row, col, self.axes[self.step - 1])
+                if self.solve(row + 1):
+                    return True
+                self.queens[row] = -1
+        return len(self.solutions) > 0
+
+    def show_board(self, row, col, ax):
+        ax.clear()
+        ax.set_xlim(-0.5, self.n - 0.5)
+        ax.set_ylim(-0.5, self.n - 0.5)
+        ax.set_aspect('equal')
+        ax.axis('off')
+        ax.set_title(f"Row {row}, Place Q at col {col}", fontsize=10, fontweight='bold')
+
+        for r in range(self.n):
+            for c in range(self.n):
+                color = '#f0d9b5' if (r + c) % 2 == 0 else '#b58863'
+                ax.add_patch(plt.Rectangle((c - 0.5, r - 0.5), 1, 1, facecolor=color, ec='#444', lw=0.5))
+
+        for r in range(row + 1):
+            c = self.queens[r]
+            if c != -1:
+                ax.add_patch(plt.Circle((c, r), 0.35, color='#27ae60', zorder=3))
+                ax.text(c, r, 'Q', ha='center', va='center', fontsize=14,
+                       fontweight='bold', color='white', zorder=4)
+
+def main():
+    n = int(input("Enter N for N-Queens: "))
+    solver = NQueens(n)
+    print(f"Solving {n}-Queens...")
+
+    found = solver.solve()
+
+    if found:
+        solver.show_board(n - 1, solver.queens[n-1], solver.axes[7])
+        plt.suptitle(f"N-Queens Solution (N={n})", fontsize=16)
+        plt.tight_layout()
+        plt.savefig("output.png", dpi=100, bbox_inches='tight')
+        print("\nVisualization saved: output.png")
+        plt.close()
+
+        print(f"\nSolution: {solver.solutions[0]}")
+        board = [["."] * n for _ in range(n)]
+        for r, c in enumerate(solver.solutions[0]):
+            board[r][c] = "Q"
+        print("\nBoard:")
+        for row in board:
+            print(" " + " ".join(row))
+    else:
+        print("No solution found")
+
+if __name__ == "__main__":
+    main()

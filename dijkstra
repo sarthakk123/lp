@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""
+Dijkstra's Shortest Path Algorithm
+"""
+import heapq
+
+def dijkstra(vertices, edges, source):
+    adj = {v: [] for v in vertices}
+    for u, v, w in edges:
+        adj[u].append((v, w))
+
+    dist = {v: float('inf') for v in vertices}
+    parent = {v: None for v in vertices}
+    dist[source] = 0
+    pq = [(0, source)]
+
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d > dist[u]: continue
+        for v, w in adj[u]:
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                parent[v] = u
+                heapq.heappush(pq, (dist[v], v))
+
+    return dist, parent
+
+def main():
+    n = int(input("Enter number of vertices: "))
+    e = int(input("Enter number of edges: "))
+    vertices = set(range(n))
+    edges = []
+    print("Enter edges (u v weight):")
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        edges.append((u, v, w))
+
+    source = int(input("Enter source vertex: "))
+    dist, parent = dijkstra(vertices, edges, source)
+
+    print(f"\nShortest distances from {source}:")
+    for v in sorted(vertices):
+        path, node = [], v
+        while node is not None:
+            path.append(str(node)); node = parent[node]
+        d = dist[v] if dist[v] != float('inf') else 'unreachable'
+        print(f"  {v}: dist={d}, path={' -> '.join(reversed(path))}")
+
+if __name__ == "__main__":
+    main()

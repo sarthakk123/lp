@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""
+Minimum Spanning Tree - Kruskal's Algorithm
+"""
+def find(parent, x):
+    if parent[x] != x:
+        parent[x] = find(parent, parent[x])
+    return parent[x]
+
+def union(parent, rank, x, y):
+    px, py = find(parent, x), find(parent, y)
+    if px == py: return False
+    if rank[px] < rank[py]: parent[px] = py
+    elif rank[px] > rank[py]: parent[py] = px
+    else: parent[py] = px; rank[px] += 1
+    return True
+
+def kruskal(vertices, edges):
+    edges = sorted(edges, key=lambda x: x[2])
+    parent = {v: v for v in vertices}
+    rank = {v: 0 for v in vertices}
+    mst, weight = [], 0
+    for u, v, w in edges:
+        if union(parent, rank, u, v):
+            mst.append((u, v, w))
+            weight += w
+    return mst, weight
+
+def main():
+    n = int(input("Enter number of vertices: "))
+    e = int(input("Enter number of edges: "))
+    vertices = set(range(1, n+1))
+    edges = []
+    print("Enter edges (u v weight):")
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        edges.append((u, v, w))
+
+    mst, weight = kruskal(vertices, edges)
+    print(f"\nMST edges: {mst}")
+    print(f"Total weight: {weight}")
+
+if __name__ == "__main__":
+    main()

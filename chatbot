@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""
+Simple Knowledge Base Chatbot - For practical exam
+"""
+import re
+import random
+
+def main():
+    print("=" * 50)
+    print("  KNOWLEDGE BASE CHATBOT")
+    print("=" * 50)
+    print("Type 'bye' to exit\n")
+
+    intents = {
+        "greeting": {
+            "patterns": [r"\bhi|hello|hey\b", r"\bgood\s*(morning|afternoon|day)\b"],
+            "responses": ["Hello! How can I help you?", "Hi there! What can I do for you?", "Hey! How can I assist you?"]
+        },
+        "hours": {
+            "patterns": [r"\bhour|open|time\s*(is|are)?\b", r"\bwhen\s*(are|do)\b"],
+            "responses": ["We're open Mon-Fri 9AM-6PM, Sat 10AM-4PM.", "Business hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM."]
+        },
+        "pricing": {
+            "patterns": [r"\bprice|cost|fee\b", r"\bhow\s*much\b"],
+            "responses": ["Basic plan: $9.99/mo, Premium: $19.99/mo.", "Pricing starts at $9.99/month."]
+        },
+        "products": {
+            "patterns": [r"\bproduct|service|offer\b", r"\bwhat\s*(do|can)\s*(you|we)\b"],
+            "responses": ["We offer Cloud Hosting, AI Analytics, and Data Storage.", "Our products: Cloud, Analytics, Storage, Support."]
+        },
+        "contact": {
+            "patterns": [r"\bcontact|phone|email|call\b", r"\breach\b"],
+            "responses": ["Email: support@company.com, Phone: 1-800-123-4567.", "Call 1-800-123-4567 or email support@company.com."]
+        },
+        "help": {
+            "patterns": [r"\bhelp|assist|support\b", r"\bhow\s*do\s*i\b"],
+            "responses": ["I can help with: hours, pricing, products, contact info.", "Try asking about hours, prices, products, or contact details."]
+        },
+        "thanks": {
+            "patterns": [r"\bthank|thanks\b"],
+            "responses": ["You're welcome!", "Happy to help!", "My pleasure!"]
+        },
+        "goodbye": {
+            "patterns": [r"\bbye|goodbye|exit|quit\b"],
+            "responses": ["Goodbye! Have a great day!", "Bye! Come back soon!", "See you later!"]
+        }
+    }
+
+    defaults = [
+        "I'm not sure about that. Try asking about hours, pricing, products, or contact.",
+        "I don't have info on that. Ask me about our services!",
+        "Not sure I understand. Try: hours, pricing, products, contact."
+    ]
+
+    while True:
+        try:
+            user = input("You: ").strip().lower()
+        except:
+            break
+
+        if not user:
+            print("Bot: Please type something!")
+            continue
+
+        if 'bye' in user or 'exit' in user or 'quit' in user:
+            print("Bot: Goodbye!")
+            break
+
+        matched = None
+        for name, data in intents.items():
+            for pattern in data["patterns"]:
+                if re.search(pattern, user):
+                    matched = random.choice(data["responses"])
+                    break
+            if matched:
+                break
+
+        print(f"Bot: {matched if matched else random.choice(defaults)}\n")
+
+if __name__ == "__main__":
+    main()
