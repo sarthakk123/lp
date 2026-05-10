@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-"""N-Queens - CSP with step-by-step terminal output"""
 import numpy as np
 
 class NQueens:
