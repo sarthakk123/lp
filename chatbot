@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-"""
-Simple Knowledge Base Chatbot - For practical exam
-"""
 import re
 import random
 
