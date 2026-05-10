@@ -1,0 +1,103 @@
+Case Study on Amazon EC2 Web Services
+Introduction
+
+Amazon Web Services provides cloud computing services through the internet. One of its important services is Amazon EC2.
+
+Amazon EC2 stands for Elastic Compute Cloud. It allows users to create virtual servers in the cloud for running applications.
+
+What is Amazon EC2?
+
+Amazon EC2 is a web service that provides:
+
+Virtual machines (instances)
+Scalable computing power
+Secure cloud hosting
+Pay-as-you-go pricing
+
+Users can launch servers within minutes without purchasing physical hardware.
+
+Features of Amazon EC2
+1. Scalability
+Increase or decrease resources according to demand.
+2. Security
+Uses firewalls and key pairs for protection.
+3. Elasticity
+Resources can be added or removed anytime.
+4. Cost Effective
+Pay only for used resources.
+5. Multiple Operating Systems
+
+Supports:
+
+Windows
+Linux
+Ubuntu
+
+Components of EC2:-
+1. EC2 Instance
+
+A virtual server in the cloud.
+
+2. AMI (Amazon Machine Image)
+
+Template used to launch instances.
+
+3. Security Group
+
+Acts as a virtual firewall.
+
+4. EBS (Elastic Block Store)
+
+Storage attached to EC2 instances.
+
+5. Key Pair
+
+Used for secure login.
+
+Working of Amazon EC2:-
+Login to AWS account.
+Select EC2 service.
+Choose Amazon Machine Image (AMI).
+Select instance type.
+Configure storage and security.
+Launch the EC2 instance.
+Connect to the virtual server.
+
+
+Applications of EC2
+Web hosting
+Cloud storage
+Machine learning
+Big data processing
+Game hosting
+Application deployment
+
+
+Advantages:-
+High scalability
+Reliable cloud platform
+Easy server management
+Global availability
+Flexible pricing
+
+
+Disadvantages
+Requires internet connection
+Complex for beginners
+Cost increases with heavy usage
+Real World Example
+
+Companies use Amazon EC2 for:
+
+Hosting websites
+Running business applications
+Data backup
+Online shopping platforms
+
+For example, e-commerce websites increase EC2 resources during sales to handle large traffic.
+
+Conclusion
+
+Amazon EC2 is a powerful cloud computing service provided by Amazon Web Services. It helps businesses run applications efficiently without maintaining physical servers.
+
+Official Websites

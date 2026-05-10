@@ -1,0 +1,33 @@
+Steps to Create Application
+Step 1: Login to Salesforce
+
+Visit:
+
+Salesforce Official Website
+
+Login using Salesforce account.
+
+Step 2: Open Developer Console
+Click Settings
+Open Developer Console
+Step 3: Create Apex Class
+
+Go to:
+
+File → New → Apex Class
+
+Example:
+
+public class HelloWorld {
+
+    public static void display() {
+        System.debug('Hello Salesforce');
+    }
+}
+Step 4: Run Apex Program
+
+Open Execute Anonymous Window and run:
+
+HelloWorld.display();
+Output
+Hello Salesforce
