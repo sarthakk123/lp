@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-"""
-Depth First Search (DFS) - Simple implementation for practical exam
-"""
 from collections import defaultdict
 
 def dfs(adj, visited, node):
