@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-"""
-Selection Sort - Greedy Algorithm
-"""
 def selection_sort(arr):
     n = len(arr)
     arr = arr.copy()
