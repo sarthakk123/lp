@@ -1,55 +1,40 @@
 #!/usr/bin/env python3
-"""Graph Coloring - CSP with Backtracking"""
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import numpy as np
+"""Graph Coloring - CSP with step-by-step terminal output"""
 
 class GraphColoring:
     def __init__(self, vertices, edges, colors):
         self.v = list(vertices)
-        self.adj = {v: set() for v in vertices}
+        self.adj = {x: set() for x in vertices}
         for u, w in edges:
             self.adj[u].add(w); self.adj[w].add(u)
         self.c = colors
-        self.color = {v: -1 for v in vertices}
+        self.color = {x: -1 for x in vertices}
+        self.steps = 0
+
+    def is_safe(self, v, col):
+        return all(self.color[nb] != col for nb in self.adj[v])
 
     def solve(self, idx=0):
         if idx == len(self.v):
             return True
         for col in range(self.c):
-            if all(self.color[nb] != col for nb in self.adj[self.v[idx]]):
+            self.steps += 1
+            if self.is_safe(self.v[idx], col):
                 self.color[self.v[idx]] = col
+                print(f"  Step {self.steps}: V{self.v[idx]} -> C{col} [ACCEPTED]")
                 if self.solve(idx + 1):
                     return True
                 self.color[self.v[idx]] = -1
+            else:
+                print(f"  Step {self.steps}: V{self.v[idx]} -> C{col} [REJECTED]")
         return False
 
-    def show(self):
-        cmap = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6']
-        fig, ax = plt.subplots(figsize=(8, 7))
-        ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-        ax.set_aspect('equal'); ax.axis('off')
-        n = len(self.v)
-        pos = {}
-        for i, v in enumerate(self.v):
-            ang = 2 * np.pi * i / n
-            pos[v] = (0.5 + 0.38*np.cos(ang), 0.5 + 0.38*np.sin(ang))
-        for u in self.v:
-            for w in self.adj[u]:
-                if u < w:
-                    ax.plot([pos[u][0], pos[w][0]], [pos[u][1], pos[w][1]], color='#aaa', lw=2)
+    def print_result(self):
+        print(f"\n{'='*40}")
+        print(f"Solution found! (Steps: {self.steps})")
+        print("\n  Coloring:")
         for v in self.v:
-            x, y = pos[v]
-            col = self.color[v]
-            ax.add_patch(plt.Circle((x, y), 0.07, color=cmap[col % 5], zorder=2, ec='white', lw=3))
-            ax.text(x, y, f"{v}\nC{col}", ha='center', va='center', fontsize=9, fontweight='bold', color='white', zorder=3)
-        patches = [mpatches.Patch(color=cmap[i % 5], label=f'Color {i}') for i in range(self.c)]
-        ax.legend(handles=patches, loc='upper left')
-        plt.savefig("output.png", dpi=100, bbox_inches='tight')
-        print("\nVisualization saved: output.png")
-        plt.close()
+            print(f"    Vertex {v}: Color {self.color[v]}")
 
 def main():
     n = int(input("Vertices: "))
@@ -63,13 +48,11 @@ def main():
     c = int(input("Colors: "))
 
     solver = GraphColoring(vertices, edges, c)
+    print("\nSolving...\n")
     if solver.solve():
-        print("\nResult:")
-        for v in solver.v:
-            print(f"  V{v}: C{solver.color[v]}")
-        solver.show()
+        solver.print_result()
     else:
-        print("No solution")
+        print(f"No solution with {c} colors")
 
 if __name__ == "__main__":
     main()
