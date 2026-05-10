@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-"""Graph Coloring - CSP with step-by-step terminal output"""
-
 class GraphColoring:
     def __init__(self, vertices, edges, colors):
         self.v = list(vertices)
