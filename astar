@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-"""A* Search - 8-Puzzle with step-by-step terminal output"""
 from heapq import heappush, heappop
 
 GOAL = (1, 2, 3, 4, 5, 6, 7, 8, 0)
