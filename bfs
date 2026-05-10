@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-"""
-Breadth First Search (BFS) - Simple implementation for practical exam
-"""
 from collections import defaultdict, deque
 
 def bfs(adj, visited, start):
