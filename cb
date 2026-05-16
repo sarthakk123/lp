@@ -1,0 +1,136 @@
+def welcome():
+    print("****** Welcome to Food Shop, I am AIRA created by Harsh ******")
+    print()
+
+
+def info():
+    global name
+
+    name = input("Can I know your good name: ")
+
+    print("Hey " + name + "! Good to see you here!!!!")
+    print("You are at the right place. I will help you book your dish and drinks.")
+    print()
+
+
+def menu():
+    print("""
+Here is your menu with prices:
+
+1. Pizza         RS.200
+2. Mango Juice   RS.70
+3. Apple Juice   RS.80
+""")
+
+
+def order(total, product_list):
+
+    print("\nPlease give us some more information about you!")
+
+    mob = input("Enter your mobile number: ")
+    add = input("Enter your delivery address: ")
+
+    print("""
+Choose payment mode:
+
+1. Online
+2. Cash on delivery
+""")
+
+    pay = input()
+
+    if pay == "2":
+        paymode = "Cash on Delivery"
+    else:
+        paymode = "Online"
+
+    print("\n****** Order Details ******\n")
+
+    print("Customer Name:", name)
+
+    print("Products Ordered:")
+
+    for item in product_list:
+        print(item[0], "-", item[1])
+
+    print("Total Price:", total)
+    print("Payment Mode:", paymode)
+    print("Delivery Address:", add)
+
+    b = input("\nPress 1 to confirm, 0 to cancel: ")
+
+    if b == "1":
+
+        print("\n****** Order Booked Successfully ******")
+
+        print("Customer Name:", name)
+
+        print("Products Ordered:")
+
+        for item in product_list:
+            print(item[0], "-", item[1])
+
+        print("Total Price:", total)
+        print("Payment Mode:", paymode)
+        print("Delivery Address:", add)
+
+        print("\nThank you! Have a nice day")
+
+    else:
+        print("\nOrder cancelled. Thank you for visiting!")
+
+
+def choice():
+
+    products = []
+    total = 0
+
+    while True:
+
+        print("\nEnter product name (pizza / mango juice / apple juice)")
+        print("Type 'done' to finish order")
+
+        a = input().lower()
+
+        if a == "done":
+            break
+
+        elif a == "pizza":
+
+            products.append(("Pizza", 200))
+            total += 200
+
+        elif a == "mango juice":
+
+            products.append(("Mango Juice", 70))
+            total += 70
+
+        elif a == "apple juice":
+
+            products.append(("Apple Juice", 80))
+            total += 80
+
+        else:
+            print("Invalid item, try again!")
+
+    if len(products) == 0:
+
+        print("No product selected. Thank you!")
+        return
+
+    print("\nYou selected:")
+
+    for item in products:
+        print(item[0], ":", item[1])
+
+    print("Total Price:", total)
+
+    order(total, products)
+
+
+# Main Program
+
+welcome()
+info()
+menu()
+choice()
